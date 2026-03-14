@@ -1,15 +1,19 @@
 package com.skiply.receipt_service.exception;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 
 
 @RestControllerAdvice
@@ -37,7 +41,7 @@ public class GlobalExceptionHandler {
      * @return A response entity with a conflict error.
      */
     @ExceptionHandler(ReceiptGenerationException.class)
-    public ResponseEntity<ApiErrorResponse> handleStudentAlreadyExists(ReceiptGenerationException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleReceiptGenerationFailure(ReceiptGenerationException ex, HttpServletRequest request) {
         logger.error("Receipt generation failed: {}", ex.getMessage());
         return createErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -50,9 +54,30 @@ public class GlobalExceptionHandler {
      * @return A response entity with a conflict error.
      */
     @ExceptionHandler(ServiceUnavailableException.class)
-    public ResponseEntity<ApiErrorResponse> handleStudentAlreadyExists(ServiceUnavailableException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleServiceUnavailable(ServiceUnavailableException ex, HttpServletRequest request) {
         logger.error("Service Unavailable: {}", ex.getMessage());
         return createErrorResponse(ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    /**
+     * Handles validation errors for @Valid request bodies.
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+        logger.error("Validation failed: {}", errors);
+        return createErrorResponse("Validation failed", HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles validation errors for @PathVariable and @RequestParam.
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
+        logger.error("Constraint violation: {}", ex.getMessage());
+        return createErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -74,7 +99,7 @@ public class GlobalExceptionHandler {
      *
      * @param message Exception message
      * @param status Http status code for exception
-     * @return A resonse entity with error
+     * @return A response entity with error
      */
     private ResponseEntity<ApiErrorResponse> createErrorResponse(String message, HttpStatus status) {
         ApiErrorResponse error = new ApiErrorResponse(LocalDateTime.now(), status.value(), message);

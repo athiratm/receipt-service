@@ -16,26 +16,22 @@ import com.skiply.receipt_service.dto.CreateReceiptRequest;
 import com.skiply.receipt_service.dto.ReceiptResponse;
 import com.skiply.receipt_service.service.ReceiptService;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
-/**
- * REST controller for create and download receipts for fee payment.
- */
 @RestController
 @RequestMapping("/api/v1/receipts")
 @RequiredArgsConstructor
+@Validated
 public class ReceiptController {
 
     private final ReceiptService receiptService;
 
-    /**
-     * Creates a new receipt based on the provided transaction details.
-     *
-     * @param request the receipt creation details
-     * @return the created receipt response
-     */
     @PostMapping
-    public ResponseEntity<ReceiptResponse> createReceipt(@RequestBody CreateReceiptRequest request) {
+    public ResponseEntity<ReceiptResponse> createReceipt(@Valid @RequestBody CreateReceiptRequest request) {
 
         ReceiptResponse receiptResponse = receiptService.createReceipt(request);
 
@@ -43,16 +39,9 @@ public class ReceiptController {
                 .body(receiptResponse);
     }
 
-    /**
-     * Downloads the receipt associated with the given transaction ID.
-     * If the receipt doesn't exist, it will be generated.
-     *
-     * @param transactionId the unique identifier of the transaction
-     * @return a response entity containing the PDF resource
-     */
     @GetMapping("/{transactionId}/download")
     public ResponseEntity<Resource> downloadReceipt(
-            @PathVariable Long transactionId) {
+            @PathVariable @Positive(message = "TransactionId must be positive") Long transactionId) {
 
         Resource receipt =
                 receiptService.getOrGenerateReceipt(transactionId);

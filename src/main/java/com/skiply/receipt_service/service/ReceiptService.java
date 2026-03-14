@@ -86,7 +86,7 @@ public class ReceiptService {
         Receipt receipt = new Receipt();
         receipt.setTransactionId(request.transactionId());
 
-        receiptRepository.save(receipt);
+        receipt = receiptRepository.save(receipt);
 
         String receiptNumber = "REC-" + receipt.getReceiptId();
         String path = receiptStoragePath + "/" + receiptNumber + ".pdf";
