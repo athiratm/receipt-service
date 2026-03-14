@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Payment Receipt</title>
+
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background:#f5f5f5;
+        }
+        .receipt{
+            width:520px;
+            margin:40px auto;
+            background:#fff;
+            border:4px solid #4B3AA5;
+            border-radius:20px;
+            overflow:hidden;
+        }
+        .purchase-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            align-items: center;
+            column-gap: 10px;
+        }
+        .logo-bar{
+            padding:15px 20px;
+        }
+        .logo{
+            background:#4B3AA5;
+            color:white;
+            display:inline-block;
+            padding:10px 18px;
+            font-weight:bold;
+            border-radius:4px;
+        }
+        .header{
+            background:#4B3AA5;
+            color:white;
+            text-align:center;
+            padding:10px;
+            font-weight:bold;
+        }
+        .content{
+            padding:20px;
+        }
+        .content p{
+            margin:6px 0;
+            font-size:14px;
+        }
+        .details{
+            display:flex;
+            margin-top:20px;
+        }
+        .logo-box{
+            width:160px;
+            height:160px;
+            background:#4B3AA5;
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:32px;
+            font-weight:bold;
+        }
+        .transaction{
+            margin-left:20px;
+            font-size:13px;
+        }
+        .transaction h4{
+            color:#4B3AA5;
+            margin-bottom:8px;
+        }
+        .transaction p{
+            margin:4px 0;
+        }
+        .purchase-header{
+            background:#4B3AA5;
+            color:white;
+            padding:10px;
+            text-align:center;
+            font-weight:bold;
+            margin-top:20px;
+        }
+        .purchase{
+            padding:15px 20px;
+            font-size:14px;
+        }
+        .purchase-row{
+            display:flex;
+            justify-content:space-between;
+        }
+        .purchase-row span {
+            flex: 1;
+        }
+
+        .purchase-row span:first-child {
+            text-align: left;
+        }
+
+        .purchase-row span:nth-child(2) {
+            text-align: center;
+        }
+
+        .purchase-row span:last-child {
+            text-align: right;
+        }
+        .purchase small{
+            color:#666;
+        }
+        .total{
+            background:#eaeaea;
+            padding:12px 20px;
+            display:flex;
+            justify-content:space-between;
+            font-weight:bold;
+        }
+        .footer{
+            text-align:center;
+            font-size:11px;
+            color:#666;
+            padding:15px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="receipt">
+
+    <div class="logo-bar">
+        <span class="logo">Skiply</span>
+    </div>
+
+    <div class="header">
+        Your transaction is Successful
+    </div>
+
+    <div class="content">
+
+        <p><strong>Hi {{studentName}},</strong></p>
+
+        <p>
+            Congratulations! Your payment transaction is successful with
+            <strong>Skiply School of Excellence</strong>.
+        </p>
+
+        <p>Kindly find the details below:</p>
+
+        <div class="details">
+
+            <div class="logo-box">
+                Skiply
+            </div>
+
+            <div class="transaction">
+
+                <h4>Transaction Details:</h4>
+
+                <p><strong>Date &amp; Time :</strong> {{transactionDate}}</p>
+                <p><strong>Student Name :</strong> {{studentName}}</p>
+                <p><strong>Student ID :</strong> {{studentId}}</p>
+                <p><strong>Reference # :</strong> {{referenceNumber}}</p>
+                <p><strong>Card # :</strong> {{cardNumber}}</p>
+                <p><strong>Card Type :</strong> {{cardType}}</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="purchase-header">
+        Purchase Details
+    </div>
+
+    {{purchaseItems}}
+
+    <div class="total">
+        <span>Total</span>
+        <span>AED {{totalAmount}}</span>
+    </div>
+
+    <div class="footer">
+        This is an automated email, please do not reply.
+        For any other query, please contact support.
+    </div>
+
+</div>
+
+</body>
+</html>
