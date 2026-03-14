@@ -18,6 +18,9 @@ import com.skiply.receipt_service.service.ReceiptService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * REST controller for create and download receipts for fee payment.
+ */
 @RestController
 @RequestMapping("/api/v1/receipts")
 @RequiredArgsConstructor
@@ -25,6 +28,12 @@ public class ReceiptController {
 
     private final ReceiptService receiptService;
 
+    /**
+     * Creates a new receipt based on the provided transaction details.
+     *
+     * @param request the receipt creation details
+     * @return the created receipt response
+     */
     @PostMapping
     public ResponseEntity<ReceiptResponse> createReceipt(@RequestBody CreateReceiptRequest request) {
 
@@ -34,6 +43,13 @@ public class ReceiptController {
                 .body(receiptResponse);
     }
 
+    /**
+     * Downloads the receipt associated with the given transaction ID.
+     * If the receipt doesn't exist, it will be generated.
+     *
+     * @param transactionId the unique identifier of the transaction
+     * @return a response entity containing the PDF resource
+     */
     @GetMapping("/{transactionId}/download")
     public ResponseEntity<Resource> downloadReceipt(
             @PathVariable Long transactionId) {
