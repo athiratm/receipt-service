@@ -18,6 +18,7 @@ import com.skiply.receipt_service.service.ReceiptService;
 
 import org.springframework.validation.annotation.Validated;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class ReceiptController {
 
     private final ReceiptService receiptService;
 
+    @Operation(summary = "Create a new receipt", description = "Creates a new receipt based on the provided transaction details.")
     @PostMapping
     public ResponseEntity<ReceiptResponse> createReceipt(@Valid @RequestBody CreateReceiptRequest request) {
 
@@ -39,6 +41,7 @@ public class ReceiptController {
                 .body(receiptResponse);
     }
 
+    @Operation(summary = "Download a receipt", description = "Downloads the receipt associated with the given transaction ID. If the receipt doesn't exist, it will be generated.")
     @GetMapping("/{transactionId}/download")
     public ResponseEntity<Resource> downloadReceipt(
             @PathVariable @Positive(message = "TransactionId must be positive") Long transactionId) {
